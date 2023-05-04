@@ -1,18 +1,24 @@
 import { Request, Response, json } from 'express';
 const UsersModel: ModelsUser = require('../models/usersModel');
-
 interface ModelsUser {
-  getAllUsers: () => {}
-  insertUser: (user: User) => {}
-  getUserById: (id: number) => {}
-  updateUserById: (user: User) => {}
-  deleteUserById: (id: number) => {}
+  getAllUsers: () => {},
+  insertUser: (user: User) => Result,
+  getUserById: (id: number) => {},
+  updateUserById: (user: User) => {},
+  deleteUserById: (id: number) => {},
 }
 
 interface User {
   user: string;
   name: string;
   password: string;
+}
+
+export interface Result {
+  status: string;
+  error: boolean;
+  message: string;
+  data: any,
 }
 
 const getAllUsersController = async (_req: Request, res: Response) => {
@@ -28,8 +34,12 @@ const getUsersByIdController = async (req: Request, res: Response) => {
 
 const insertUsersController = async (req: Request, res: Response) => {
   const user: User = req.body
-  const result = await UsersModel.insertUser(user);
-  res.status(200).json(result);
+  const result: Result = await UsersModel.insertUser(user);
+  if (result.error) {
+    res.status(500).json(result.message);
+  } else {
+    res.status(200).json(result.message);
+  }
 }
 
 const updateUserByIdController = async (req: Request, res: Response) => {

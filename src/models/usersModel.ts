@@ -63,16 +63,26 @@ const getUserById = async (id: number) => {
 }
 
 const insertUser = async (user: User) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     connectionUser.query('INSERT INTO users (user, NAME, PASSWORD) VALUES (?, ?, MD5(?))', [
       user.user,
       user.name,
       user.password
-    ], (err: any, rows: any) => {
+    ], (err: error, rows: any) => {
       if (err) {
-        reject(err);
+        resolve({
+          status: 'error',
+          error: true,
+          message: err.sqlMessage,
+          data: err,
+        });
       } else {
-        resolve(rows);
+        resolve({
+          status: 'success',
+          error: false,
+          message: "User inserted successfully",
+          data: rows,
+        });
       }
     })
   })

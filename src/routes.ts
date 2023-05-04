@@ -8,8 +8,13 @@ interface ControllersUSer {
   deleteUserByController: (req: Request, res: Response) => {}
 }
 
+interface ControllersValid {
+  validDataUser: (req: Request, res: Response) => {},
+}
+
 
 const UserController: ControllersUSer = require('./Controllers/UserController');
+const ValidController: ControllersValid = require('./Controllers/ValidateDatasController');
 
 const router = Router();
 
@@ -25,7 +30,7 @@ router.get("/", (req: Request, res: Response) => {
 
 router.get("/users", UserController.getAllUsersController);
 router.get("/users/:id", UserController.getUsersByIdController);
-router.post("/users", UserController.insertUsersController);
+router.post("/users", ValidController.validDataUser, UserController.insertUsersController);
 router.put("/users/", UserController.updateUserByIdController);
 router.delete("/users/:id", UserController.deleteUserByController);
 
